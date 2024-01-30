@@ -3,9 +3,13 @@ import {
   Dispatch,
   ReactNode,
   createContext,
+  useContext,
+  useEffect,
   useReducer,
   useState,
 } from "react";
+
+const STORAGE_KEY = "postContextContent";
 
 export type Post = {
   id: number;
@@ -23,7 +27,15 @@ type PostContextType = {
 export const PostContext = createContext<PostContextType | null>(null);
 
 export const PostProvider = ({ children }: { children: ReactNode }) => {
-  const [posts, dispatch] = useReducer(postReducer, []);
+  const [isMounted, setIsMounted] = useState(false);
+
+  //para persistir um localstorage vamos adicionar nesse código o parse ou retorno null
+  const [posts, dispatch] = useReducer(
+    postReducer,
+    typeof window !== "undefined"
+      ? JSON.parse(localStorage.getItem(STORAGE_KEY) ?? "[]")
+      : []
+  );
 
   //esse código foi substituido pelo reducer
   // const [posts, setPosts] = useState<Post[]>([]);
@@ -39,9 +51,21 @@ export const PostProvider = ({ children }: { children: ReactNode }) => {
   //   dispatch({ type: "remove", payload: { id } });
   // };
 
+  useEffect(() => {
+    setIsMounted(true);
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(posts));
+  }, [posts]);
+
+  if (!isMounted) {
+    return null;
+  }
+
   return (
     <PostContext.Provider value={{ posts, dispatch }}>
       {children}
     </PostContext.Provider>
   );
 };
+
+//criando um hook de atalho do useContext
+export const usePosts = () => useContext(PostContext);

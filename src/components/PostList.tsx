@@ -1,8 +1,10 @@
-import { PostContext } from "@/contexts/PostContext";
+import { PostContext, usePosts } from "@/contexts/PostContext";
 import { useContext } from "react";
 
 export const PostList = () => {
-  const postCtx = useContext(PostContext);
+  //substituindo o context pelo hook de atalho criado
+  // const postCtx = useContext(PostContext);
+  const postCtx = usePosts();
 
   const handleRemoveButton = (id: number) => {
     postCtx?.dispatch({ type: "remove", payload: { id } });
