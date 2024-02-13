@@ -12,11 +12,13 @@ export const Container = ({ children }: Props) => {
 
   return (
     <div
-      className={`w-full h-screen ${
-        themeCtx?.theme === "light"
-          ? "bg-white text-black"
-          : "bg-black text-white"
-      }`}
+      // className={`w-full h-screen ${
+      //   themeCtx?.theme === "light"
+      //     ? "bg-white text-black"
+      //     : "bg-black text-white"
+      // }`}
+
+      className="w-full h-screen bg-white text-black dark:bg-black dark:text-white"
     >
       <div className="container mx-auto">
         TEMA: {themeCtx?.theme} {children}
